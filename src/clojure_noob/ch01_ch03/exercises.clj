@@ -335,3 +335,98 @@ dog-names
 (def by5 (multiplier-maker 5))
 
 (by5 3)
+
+; Passing functions as parameters
+(defn multiply-something-by-2
+  [function]
+  (* 2 function))
+
+(multiply-something-by-2 (+ 1 1))
+(multiply-something-by-2 (inc 2))
+
+; LET vs DEF
+(let [x 3]
+  x)
+
+(def dalmatian-list
+  ["Pongo" "Perdita" "Puppy 1" "Puppy 2"])
+
+(let [dalmatians (take 2 dalmatian-list)]
+  dalmatians)
+
+; global scope using DEF
+(def x 0)
+x ; => 0
+
+; local scope using LET
+(let [x 1] x) ; => 1
+x ; => 0
+
+(let [x (inc x)] x) ; => 1
+
+(let [[pongo & dalmatians] dalmatian-list] 
+  [pongo dalmatians]) ; => ["Pongo" ("Perdita" "Puppy 1" "Puppy 2")]
+
+(into [] (set [:a :a])) ; => [:a]
+
+; => let allows us to name things, thus simplifying the code
+(into ["bananas"] ["apples" "oranges"])
+; => ["bananas" "apples" "oranges"]
+
+; => naming ["apples" "oranges"] vector
+(let [fruit ["apples" "oranges"]]
+  (into ["bananas"] fruit))
+; => ["bananas" "apples" "oranges"]
+
+; prints from 0 to 5 and prints "Goodbye!" in the end
+(loop [iteration 0]
+  (println "Iteration " iteration)
+  (if (> iteration 4)
+    (println "Goodbye!")
+    (recur (inc iteration))))
+
+; prints from 5 to 0 and finally prints "The end!"
+(loop [number 5]
+  (println "Number: " number)
+  (if (< number 1)
+    (println "The end!")
+    (recur (- number 1))))
+
+; more verbose
+(defn rec-printer
+  ([]
+  (rec-printer 0))
+  ([iteration]
+  (println "Iteration" iteration)
+  (if (> iteration 4)
+    (println "Goodbye!")
+    (rec-printer (inc iteration)))))
+
+(rec-printer)
+
+; REGEX
+#"regular-expression"
+
+(re-find #"^left-" "left-eye")
+(re-find #"^left-" "cleft-chin")
+(re-find #"some" "awesome")
+
+(clojure.string/replace "ababa" #"a" "c")
+
+(def dog-owner {:dog "Akita" :owner "Amanda"})
+
+(defn owner-changer
+  [entry]
+  {:dog (:dog entry)
+   :owner (clojure.string/replace (:owner entry) #"Amanda" "Karina")})
+
+(owner-changer dog-owner)
+
+; REDUCE
+(+ (+ (+ 1 2) 3) 4)
+
+(reduce + [1 2 3 4])
+
+(reduce + 15 [1 2 3 4])
+(reduce + 15 '(1 2 3 4))
+(reduce + 15 #{1 2 3 4})
