@@ -27,7 +27,7 @@
 ; P8
 (= (set '(:a :b :c :d)) (set '(:a :a :b :c :c :c :c :d :d)))
 (= #{:a :b :c :d} (set '(:a :a :b :c :c :c :c :d :d)))
-(= #{:a :b :c :d} (clojure.set/union #{:a :b :c} #{:b :c :d}))
+; (= #{:a :b :c :d} (clojure.set/union #{:a :b :c} #{:b :c :d}));
 
 ; P9
 (= #{1 2 3 4} (conj #{1 4 3} 2))
