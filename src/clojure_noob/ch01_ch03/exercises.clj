@@ -364,7 +364,7 @@ x ; => 0
 
 (let [x (inc x)] x) ; => 1
 
-(let [[pongo & dalmatians] dalmatian-list] 
+(let [[pongo & dalmatians] dalmatian-list]
   [pongo dalmatians]) ; => ["Pongo" ("Perdita" "Puppy 1" "Puppy 2")]
 
 (into [] (set [:a :a])) ; => [:a]
@@ -395,12 +395,12 @@ x ; => 0
 ; more verbose
 (defn rec-printer
   ([]
-  (rec-printer 0))
+   (rec-printer 0))
   ([iteration]
-  (println "Iteration" iteration)
-  (if (> iteration 4)
-    (println "Goodbye!")
-    (rec-printer (inc iteration)))))
+   (println "Iteration" iteration)
+   (if (> iteration 4)
+     (println "Goodbye!")
+     (rec-printer (inc iteration)))))
 
 (rec-printer)
 
@@ -430,3 +430,37 @@ x ; => 0
 (reduce + 15 [1 2 3 4])
 (reduce + 15 '(1 2 3 4))
 (reduce + 15 #{1 2 3 4})
+
+; EXERCISES
+; EX1
+(defn dog-barking
+  []
+  (str "Woof woof!"))
+(dog-barking)
+
+(def friends ["Mary" "David" "Anne"])
+friends
+
+(let [[employee & office-objects] '("Adam" "Pencil" "Eraser" "Pen")]
+  [employee office-objects])
+
+(def coordinates {:lat 120 :long 200})
+(get coordinates :lat)
+
+(def chosen-numbers (hash-set 1 3 1 4 5 3 4))
+(contains? chosen-numbers 3)
+
+; EX2
+(defn hundred-adder
+  [x]
+  (+ x 100))
+(hundred-adder 20)
+
+; EX3
+(defn dec-maker
+  "Subtracts a given value"
+  [subtraend]
+  #(- % subtraend))
+
+(def dec9 (dec-maker 9))
+(dec9 10)
