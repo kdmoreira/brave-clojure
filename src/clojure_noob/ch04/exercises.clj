@@ -16,7 +16,7 @@ transformed-list
 
 (map titleize ["Puppies", "Kittens"])
 (map titleize '("Puppies", "Kittens"))
-(map #(titleize (second %)) 
+(map #(titleize (second %))
      {:something "Paradise" :else "Hawaii"})
 
 ; SEQ
@@ -85,7 +85,7 @@ transformed-list
 ; => {:lat 1 :long 2}
 
 ((fn [x] (+ x 2)) 2)
-((fn [x [y]] (+ x y)) 2[2])
+((fn [x [y]] (+ x y)) 2 [2])
 ((fn [x y] (+ x y)) 2 2)
 ; => 4
 
@@ -124,9 +124,9 @@ transformed-list
 
 (def hours-watching-tv
   [{:month 1 :day 1 :hours 4.5}
-  {:month 1 :day 2 :hours 3}
-  {:month 1 :day 3 :hours 1.5}
-  {:month 1 :day 4 :hours 4}])
+   {:month 1 :day 2 :hours 3}
+   {:month 1 :day 3 :hours 1.5}
+   {:month 1 :day 4 :hours 4}])
 
 ; using maps
 (take-while #(> (:hours %) 2) hours-watching-tv)
@@ -179,3 +179,160 @@ transformed-list
 (concat (vector 1 2) [3 4 5])
 (concat '(1 2) [3 4 5])
 ; => (1 2 3 4 5)
+
+; LAZY SEQS
+(def coords-database
+  {0 {:lat 1, :long 2}
+   1 {:lat 3, :long 4}})
+
+(get coords-database 0)
+
+(def vampire-database
+  {0 {:makes-blood-puns? false, :has-pulse? true  :name "McFishwich"}
+   1 {:makes-blood-puns? false, :has-pulse? true  :name "McMackson"}
+   2 {:makes-blood-puns? true,  :has-pulse? false :name "Damon Salvatore"}
+   3 {:makes-blood-puns? true,  :has-pulse? true  :name "Mickey Mouse"}})
+
+(defn vampire-related-details
+  [social-security-number]
+  (Thread/sleep 1000)
+  (get vampire-database social-security-number))
+
+(defn vampire?
+  [record]
+  (and (:makes-blood-puns? record)
+       (not (:has-pulse? record))
+       record))
+
+(defn identify-vampire
+  [social-security-numbers]
+  (first (filter vampire? (map vampire-related-details social-security-numbers))))
+
+(time (vampire-related-details 0))
+(map vampire-related-details [0 1])
+
+(time (identify-vampire (range 0 100000)))
+
+; INFINITE SEQUENCES
+(concat (take 8 (repeat "na")) ["Batman!"])
+
+(take 3 (repeatedly (fn [] (rand-int 10))))
+
+(cons 0 '(2 4 6))
+
+(defn even-numbers
+  ([] (even-numbers 0))
+  ([n] (cons n (lazy-seq (even-numbers (+ n 2))))))
+
+(take 10 (even-numbers))
+
+; COLLECTIONS
+(empty? [])
+(empty? ["no!"])
+
+(map identity [1])
+(map identity {:lat 1 :long 2})
+
+(into {} (map identity {:lat 1 :long 2}))
+(into [] (map identity [1]))
+(into #{} (map identity [1 1]))
+(into [1] '(2 3))
+(into {:lat 1} [[:long 2]]) ; => {:lat 1, :long 2}
+
+(conj [0 [1]]) ; => [0 [1]]
+(conj [0] [1]) ; => [0 [1]]
+(conj [0] [1] [2]) ; => [0 [1] [2]]
+(conj [0] 1 2) ; => [0 1 2]
+(conj {:a 1} {:b 2}) ; => {:a 1 :b 2}
+(conj {:a 1} [:b 2]) ; => {:a 1 :b 2}
+
+(defn my-conj
+  [target & additions]
+  (into target additions))
+
+(my-conj [1] 2 3 4)
+
+; APPLY
+(max 0 1 2) ; => 2
+
+; max expects different arguments, but a vector
+; is a single argument
+(max [0 1 2]) ; => [0 1 2]
+
+; apply explodes a seqable data structure
+; like this vector, passing its values as arguments
+(apply max [0 1 2]) ; => 2
+
+; without apply before conj
+(defn my-into-v1
+  [target additions]
+  (conj target additions))
+
+(my-into-v1 [0] [1 2 3]) ; => [0 [1 2 3]]
+
+; with apply
+(defn my-into-v2
+  [target additions]
+  (apply conj target additions))
+
+(my-into-v2 [0] [1 2 3]) ; => [0 1 2 3]
+
+; PARTIAL
+(defn add10-function
+  [x]
+  (+ x 10))
+(add10-function 3)
+
+(def add10 (partial + 10))
+(add10 3) ; => 13
+(add10 3 5) ; => 18
+
+(def add-letters
+  (partial conj ["a" "b" "c"]))
+
+(add-letters "d" "e")
+; => ["a" "b" "c" "d" "e"]
+
+(defn my-partial
+  [partialized-fn & args]
+  (fn [& more-args]
+    (apply partialized-fn (into args more-args))))
+
+(def add20 (my-partial + 20))
+(add20 3)
+
+; logger without partial
+(defn lousy-logger
+  [log-level message]
+  (condp = log-level
+    :warn (clojure.string/lower-case message)
+    :emergency (clojure.string/upper-case message)))
+
+(lousy-logger :warn "Red light ahead")
+
+; logger with partial
+(def warn (partial lousy-logger :warn))
+(warn "Red light ahead")
+
+; COMPLEMENT
+(defn identify-humans-v1
+  [social-security-numbers]
+  (filter #(not (vampire? %))
+          (map vampire-related-details social-security-numbers)))
+
+; by using complement, it negates a boolean function
+(def not-vampire? (complement vampire?))
+
+(defn identity-humans-v2
+  [social-security-numbers]
+  (filter not-vampire?
+          (map vampire-related-details social-security-numbers)))
+
+(defn my-complement
+  [fun]
+  (fn [& args]
+    (not (apply fun args))))
+
+(def my-pos? (complement neg?))
+(my-pos? 1)
+(my-pos? -1)
