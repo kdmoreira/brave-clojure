@@ -1,44 +1,35 @@
-# clojure-noob
+# Clojure Studies
 
-FIXME: description
+In this repository you'll find exercises and notes I've been taking while reading [**Clojure for The Brave and True**](https://www.braveclojure.com). You'll also find my personal solutions to [**4ever-clojure**](https://4clojure.oxal.org)'s exercises.
 
 ## Installation
 
-Download from http://example.com/FIXME.
+1. In order to run this project you must have the Java Runtime Environment (JRE) or Java Development Kit (JDK) installed, which you can download [**here**](https://www.oracle.com/java/technologies/downloads/).
+2. You should also install [**Leiningen**](https://leiningen.org/), which requires Java.
+3. Clone this repository. There are different ways you can do this:
+
+ - If you have `git` installed, use the following command:
+```
+$ git clone https://github.com/kdmoreira/brave-clojure.git
+```
+ - If you don't have `git` installed, simply download the `.zip` file by clicking on the button "*Clone*" in the repository's homepage.
 
 ## Usage
 
-FIXME: explanation
+Open the project folder in your computer and type in your terminal:
 
-    $ java -jar clojure-noob-0.1.0-standalone.jar [args]
+    $ lein run
+
+The sentence `I'm a little teapot!` should appear. If it did, success!
 
 ## Options
 
-FIXME: listing of options this app accepts.
+You may use the REPL by typing in your terminal:
 
-## Examples
-
-...
-
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
+    $ lein repl
 
 ## License
 
-Copyright © 2022 FIXME
+MIT License
 
-This program and the accompanying materials are made available under the
-terms of the Eclipse Public License 2.0 which is available at
-http://www.eclipse.org/legal/epl-2.0.
-
-This Source Code may also be made available under the following Secondary
-Licenses when the conditions for such availability set forth in the Eclipse
-Public License, v. 2.0 are satisfied: GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or (at your
-option) any later version, with the GNU Classpath Exception which is available
-at https://www.gnu.org/software/classpath/license.html.
+Copyright © 2022
