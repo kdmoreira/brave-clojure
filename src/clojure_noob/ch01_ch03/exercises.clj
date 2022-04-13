@@ -464,3 +464,10 @@ friends
 
 (def dec9 (dec-maker 9))
 (dec9 10)
+
+; EX4
+(defn mapset
+  [function collection]
+  (into #{} (map function (set collection))))
+
+(mapset inc [1 1 2 2])

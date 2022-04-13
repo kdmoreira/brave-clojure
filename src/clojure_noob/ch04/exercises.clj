@@ -336,3 +336,66 @@ transformed-list
 (def my-pos? (complement neg?))
 (my-pos? 1)
 (my-pos? -1)
+
+; Vampire Data Analysis
+(def filename "resources/suspects.csv")
+(slurp filename)
+
+(def vamp-keys [:name :glitter-index])
+
+(defn str->int
+  [str]
+  (Integer. str))
+
+(def conversions {:name identity
+                  :glitter-index str->int})
+
+(defn convert
+  [vamp-key value]
+  ((get conversions vamp-key) value))
+
+(convert :glitter-index "3")
+(convert :name "Edward Cullen")
+
+(defn parse
+  "Convert a CSV into rows of columns"
+  [string]
+  (map #(clojure.string/split % #",")
+        (clojure.string/split string #"\r\n")))
+
+(parse (slurp filename))
+
+(defn mapify
+  "Return a seq of maps like {:name \"Edward Cullen\" :glitter-index 10}"
+  [rows]
+  (map (fn [unmapped-row]
+         (reduce (fn [row-map [vamp-key value]]
+                   (assoc row-map vamp-key (convert vamp-key value)))
+                 {}
+                 (map vector vamp-keys unmapped-row)))
+       rows))
+
+(first (mapify (parse (slurp filename))))
+
+(defn glitter-filter
+  [minimum-glitter records]
+  (filter #(>= (:glitter-index %) minimum-glitter) records))
+
+(glitter-filter 3 (mapify (parse (slurp filename))))
+
+; EX1
+(defn list-vampire-names
+  [filtered-records]
+  (map #(get % :name) filtered-records))
+
+(list-vampire-names (glitter-filter 3 (mapify (parse (slurp filename)))))
+
+(def suspects (glitter-filter 3 (mapify (parse (slurp filename)))))
+
+; EX2
+(defn append-suspect
+  [suspects new-suspect]
+  (conj suspects new-suspect))
+
+(def new-suspect {:name "Eva Green" :glitter-index 6})
+(append-suspect suspects new-suspect)
