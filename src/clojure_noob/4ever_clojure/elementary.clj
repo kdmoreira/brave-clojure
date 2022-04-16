@@ -84,3 +84,35 @@
 (= 10 (let [x 7, y 3, z 1] (+ x y)))
 (= 4 (let  [x 7, y 3, z 1] (+ y z)))
 (= 1 (let [x 7, y 3, z 1] z))
+
+; P37
+(re-seq #"[A-Z]+" "bA1B3Ce ") ; => ("A", "B" "C")
+(apply str '(1 2 3)) ; => "123"
+
+(= "ABC" (apply str (re-seq #"[A-Z]+" "bA1B3Ce ")))
+
+; P52
+(let [x (+ 1 1)] x) ; => 2
+
+(= [2 4] (let [[a b c d e f g] (range)] [c e]))
+
+; P57
+(dec 10) ; => 9
+(vector (dec 10)) ; => [9]
+(conj [1 2] 3 4) ; => 1 2 3 4
+(conj (vector (dec 10)) 8) ; => [9 8]
+(when (> 1 0) "Greater!") ; => Greater!
+(when (> 0 1) "Greater!") ; => nil
+(= '(5 4 3 2 1) 
+   ((fn foo [x] (when (> x 0) (conj (foo (dec x)) x))) 5))
+
+; P64
+(= 15 (reduce + [1 2 3 4 5]))
+(= 0 (reduce + []))
+(= 6 (reduce + 1 [2 3]))
+
+; P68
+(= [7 6 5 4 3] (loop [x 5 result []]
+  (if (> x 0)
+    (recur (dec x) (conj result (+ 2 x)))
+    result)))
