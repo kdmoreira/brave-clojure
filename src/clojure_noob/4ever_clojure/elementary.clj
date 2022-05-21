@@ -113,6 +113,57 @@
 
 ; P68
 (= [7 6 5 4 3] (loop [x 5 result []]
-  (if (> x 0)
-    (recur (dec x) (conj result (+ 2 x)))
-    result)))
+                 (if (> x 0)
+                   (recur (dec x) (conj result (+ 2 x)))
+                   result)))
+
+; P71
+; thread first basic example
+(defn sum10
+  [n]
+  (+ n 10))
+
+(defn sub5
+  [n]
+  (- n 5))
+
+(def my-n 20)
+
+(-> my-n
+    sum10
+    sub5) ; => 25
+
+; solution
+(= (last (sort (rest (reverse [2 5 4 1 3 6]))))
+   (-> [2 5 4 1 3 6] reverse rest sort last)
+   5)
+
+; P72
+; thread last example
+(->> [1 2 3 4 5]
+     (take 3)
+     (map inc)) ; => (2 3 4)
+
+(drop 2 [1 2 3 4]) ; => (3 4)
+
+; solution
+(= (reduce + (map inc (take 3 (drop 2 [2 5 4 1 3 6]))))
+   (->> [2 5 4 1 3 6] (drop 2) (take 3) (map inc) (reduce +))
+   11)
+
+; P134
+(def map-p134 {:a 1 :b 2 :c nil})
+(:d map-p134) ; => nil
+(:c map-p134) ; => nil
+(contains? map-p134 :c) ; => true
+(= nil (:c map-p134)) ; => true
+
+(defn nil-key?
+  [key map]
+  (if (contains? map key)
+    (= nil (key map))
+    false))
+
+(true?  (nil-key? :a {:a nil :b 2}))
+(false? (nil-key? :b {:a nil :b 2}))
+(false? (nil-key? :c {:a nil :b 2}))
