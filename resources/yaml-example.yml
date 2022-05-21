@@ -1,0 +1,6 @@
+name: "Karina"
+surname: "Moreira"
+profileDetails:
+  - birthday: "18/05"
+  - numberOfPets: 1
+  - hobbies: ["manga", "series", "games"]

@@ -6,6 +6,7 @@
   :dependencies [
                  [org.clojure/clojure "1.10.3"]
                  [prismatic/schema "1.2.0"]
+                 [io.forward/yaml "1.0.11"]
                  ]
   :main ^:skip-aot clojure-noob.core
   :target-path "target/%s"

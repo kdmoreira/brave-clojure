@@ -257,7 +257,7 @@ transformed-list
 
 ; max expects different arguments, but a vector
 ; is a single argument
-(max [0 1 2]) ; => [0 1 2]
+;(max [0 1 2]) ; => [0 1 2]
 
 ; apply explodes a seqable data structure
 ; like this vector, passing its values as arguments
