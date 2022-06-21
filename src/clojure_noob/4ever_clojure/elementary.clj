@@ -64,7 +64,7 @@
 (= ((fn hello-world
       [name]
       (str "Hello, " name "!")) "Dave") "Hello, Dave!")
-(= ((fn [name] 
+(= ((fn [name]
       (str "Hello, " name "!")) "Jenn") "Hello, Jenn!")
 (= (#(str "Hello, " % "!") "Rhea") "Hello, Rhea!")
 (= ((fn [name] (apply str ["Hello, " name "!"])) "Rhea") "Hello, Rhea!")
@@ -103,7 +103,7 @@
 (conj (vector (dec 10)) 8) ; => [9 8]
 (when (> 1 0) "Greater!") ; => Greater!
 (when (> 0 1) "Greater!") ; => nil
-(= '(5 4 3 2 1) 
+(= '(5 4 3 2 1)
    ((fn foo [x] (when (> x 0) (conj (foo (dec x)) x))) 5))
 
 ; P64
@@ -167,3 +167,56 @@
 (true?  (nil-key? :a {:a nil :b 2}))
 (false? (nil-key? :b {:a nil :b 2}))
 (false? (nil-key? :c {:a nil :b 2}))
+
+; P145
+(rem 4 1) ; => 0
+(rem 4 2) ; => 0
+(rem 4 3) ; => 1
+
+(= [1 5 9 13 17 21 25 29 33 37]
+   (for [x (range 40)
+         :when (= 1 (rem x 4))]
+     x))
+
+(= [1 5 9 13 17 21 25 29 33 37]
+   (for [x (iterate #(+ 4 %) 0)
+         :let [z (inc x)]
+         :while (< z 40)]
+     z))
+
+(= [1 5 9 13 17 21 25 29 33 37]
+   (for [[x y] (partition 2 (range 20))]
+     (+ x y)))
+
+; P156
+(def k [:a :b :c])
+(map #(assoc {} % 0) k) ; => ({:a 0} {:b 0} {:c 0})
+(into {} (map #(assoc {} % 0) k)) ; => {:a 0, :b 0, :c 0}
+
+(defn map-defaults
+  [default-value keys]
+  (into {} (map #(assoc {} % default-value) keys)))
+
+(= (map-defaults 0 [:a :b :c]) {:a 0 :b 0 :c 0})
+(= (map-defaults "x" [1 2 3]) {1 "x" 2 "x" 3 "x"})
+(= (map-defaults [:a :b] [:foo :bar]) {:foo [:a :b] :bar [:a :b]})
+
+; P161
+(def my-set #{1 2})
+
+(clojure.set/superset? my-set #{2})
+(clojure.set/subset? #{1} my-set)
+(clojure.set/superset? my-set #{1 2})
+(clojure.set/subset? #{1 2} my-set)
+
+; P162
+(if-not false :then :else) ; => :then
+(if false :then :else) ; => :else
+
+(= 1 (if-not false 1 0))
+(= 1 (if-not nil 1 0))
+(= 1 (if true 1 0))
+(= 1 (if [] 1 0))
+(= 1 (if [0] 1 0))
+(= 1 (if 0 1 0))
+(= 1 (if 1 1 0))
